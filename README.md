@@ -35,7 +35,7 @@ compile 'com.wealthfront:magellan-rx:' + magellanVersion
 ### Add-on coming soon
 
 - Rx 2: already merged, will be in the next release (thanks to @FabianTerhorst).
-- Design lib (for tabs).
+- Design lib (for tabs), in the meantime, [here is the code to implement tabs](https://github.com/wealthfront/magellan/wiki/Implementing-Tabs-or-other-%22Screens-into-a-Screen%22-UI%2C-using-ScreenGroup).
 
 ## Getting started
 
@@ -54,18 +54,18 @@ public class MainActivity extends SingleActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main_activity);
+    setContentView(R.layout.activity_main);
   }
 
 }
 ```
 
-`main_activity.xml`:
+`activity_main.xml`:
 
 ```xml
 <com.wealthfront.magellan.ScreenContainer
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/magellan_container"
+    android:id="@+id/magellan_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     /> 
@@ -90,7 +90,7 @@ Associated View `HomeView.java`:
 public class HomeView extends BaseScreenView<HomeScreen> {
   public HomeView(Context context) {
     super(context);
-    inflate(R.layout.home);
+    inflate(context, R.layout.home, this);
   }
 }
 ``` 
@@ -104,6 +104,8 @@ public class HomeView extends BaseScreenView<HomeScreen> {
 [Advanced sample](https://github.com/wealthfront/magellan/tree/master/magellan-sample-advanced) using Dependency Injection, Retrofit, and Rx.
 
 ![advanced-sample-gif](https://cloud.githubusercontent.com/assets/3293136/24832801/b94ad73a-1c6c-11e7-89dd-2f561af21a04.gif)
+
+[Kotlin sample](https://github.com/jmfayard/android-kotlin-magellan) (courtesey of @jmfayard)
 
 ## Learn More
 
