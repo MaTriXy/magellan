@@ -1,39 +1,50 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 group = GROUP
 version = VERSION_NAME
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.1"
+  compileSdkVersion Versions.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion 15
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+
+  compileOptions {
+    setSourceCompatibility(JavaVersion.VERSION_17)
+    setTargetCompatibility(JavaVersion.VERSION_17)
+  }
+
   buildTypes {
     release {
       minifyEnabled false
     }
   }
+  namespace 'com.wealthfront.magellan.rx'
 }
 
-apply from: rootProject.file('checkstyle/checkstyle.gradle')
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  if (!name.contains("UnitTest")) {
+    kotlinOptions.freeCompilerArgs = ['-Xexplicit-api=strict']
+  }
+  kotlinOptions.allWarningsAsErrors = true
+  kotlinOptions.jvmTarget = JavaVersion.VERSION_17
+}
 
 dependencies {
+  implementation project(':magellan-legacy')
+  implementation project(':magellan-library')
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile project(':magellan-library')
-  compile 'io.reactivex:rxjava:1.2.2'
+  implementation libs.rxjava
+  implementation libs.inject
 
-  testCompile 'junit:junit:4.12'
-  testCompile 'com.google.truth:truth:0.28'
-  testCompile 'org.mockito:mockito-core:2.0.31-beta'
+  testImplementation libs.junit
+  testImplementation libs.truth
+  testImplementation libs.mockito
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

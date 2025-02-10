@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = GROUP
+version = VERSION_NAME
+
+android {
+  compileSdkVersion Versions.compileSdkVersion
+
+  resourcePrefix 'magellan_'
+
+  defaultConfig {
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  compileOptions {
+    setSourceCompatibility(JavaVersion.VERSION_17)
+    setTargetCompatibility(JavaVersion.VERSION_17)
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+  namespace 'com.wealthfront.magellan.legacy'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  if (!name.contains("UnitTest")) {
+    kotlinOptions.freeCompilerArgs = ['-Xexplicit-api=strict', '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi']
+  }
+  kotlinOptions.allWarningsAsErrors = true
+  kotlinOptions.jvmTarget = JavaVersion.VERSION_17
+}
+
+dependencies {
+  implementation project(':magellan-library')
+
+  implementation libs.appCompat
+  implementation libs.inject
+  implementation libs.coroutines
+  implementation libs.coroutinesAndroid
+
+  testImplementation project(':internal-test-support')
+  testImplementation libs.testCore
+  testImplementation libs.junit
+  testImplementation libs.truth
+  testImplementation libs.mockito
+  testImplementation libs.robolectric
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

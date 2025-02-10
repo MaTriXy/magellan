@@ -4,40 +4,39 @@ group = GROUP
 version = VERSION_NAME
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.1"
+  compileSdkVersion Versions.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion 15
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+
+  compileOptions {
+    setSourceCompatibility(JavaVersion.VERSION_17)
+    setTargetCompatibility(JavaVersion.VERSION_17)
+  }
+
   buildTypes {
     release {
       minifyEnabled false
     }
   }
-}
 
-apply from: rootProject.file('checkstyle/checkstyle.gradle')
+  lintOptions {
+    disable 'StaticFieldLeak'
+  }
+  namespace 'com.wealthfront.magellan.support'
+}
 
 dependencies {
+  implementation project(':magellan-legacy')
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile project(':magellan-library')
-  compile 'com.android.support:appcompat-v7:25.3.1'
+  implementation libs.appCompat
 
-  testCompile 'junit:junit:4.12'
-  testCompile 'com.google.truth:truth:0.28'
-  testCompile 'org.mockito:mockito-core:2.0.31-beta'
-  testCompile('org.robolectric:robolectric:3.1-rc1') {
-    exclude group: 'commons-logging', module: 'commons-logging'
-    exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-  }
+  testImplementation libs.junit
+  testImplementation libs.truth
+  testImplementation libs.mockito
+  testImplementation libs.robolectric
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

@@ -1,0 +1,22 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up our JDK environment
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: 17
+    - name: Build with Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        arguments: testDebugUnitTest lintRelease checkstyle lintKotlin

@@ -1,58 +1,90 @@
-apply plugin: 'com.android.application'
+plugins {
+  id 'com.android.application'
+  id 'kotlin-android'
+  id 'kotlin-kapt'
+}
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.1"
+  compileSdkVersion Versions.compileSdkVersion
+
   defaultConfig {
-    applicationId "com.wealthfront.magellan.sample"
-    minSdkVersion 15
-    targetSdkVersion 25
+    applicationId "com.wealthfront.magellan.sample.advanced"
+    minSdkVersion 21
+    targetSdkVersion Versions.targetSdkVersion
     versionCode 1
     versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    testInstrumentationRunner "com.wealthfront.magellan.IntegrationTestRunner"
+    testInstrumentationRunnerArguments clearPackageData: 'true'
   }
-  buildTypes {
-    release {
-      minifyEnabled false
+
+  buildFeatures {
+    viewBinding = true
+  }
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
+    testOptions {
+      execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
   }
 
-  packagingOptions {
-    exclude 'META-INF/LICENSE'
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
   }
 
-  lintOptions {
-    disable 'InvalidPackage','IconDensities'
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17
+  }
+  namespace 'com.wealthfront.magellan.sample.advanced'
 }
 
-apply from: rootProject.file('checkstyle/checkstyle.gradle')
-
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:appcompat-v7:25.2.0'
-  compile project(':magellan-library')
 
-  compile 'com.jakewharton:butterknife:8.5.1'
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+  implementation project(':magellan-library')
+  implementation project(':magellan-rx2')
 
-  compile 'com.google.dagger:dagger:2.10'
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+  implementation libs.androidXCore
+  implementation libs.appCompat
+  implementation libs.material
+  implementation libs.constraintLayout
 
-  compile project(path: ':magellan-rx')
+  implementation libs.dagger
+  kapt libs.daggerCompiler
 
-  compile 'com.squareup.retrofit2:retrofit:2.2.0'
-  compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-  compile 'com.squareup.retrofit2:converter-jackson:2.2.0'
-  compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+  implementation libs.retrofit
+  implementation libs.rxjava
+  implementation libs.rxAndroid2
+  implementation libs.retrofitMock
+  implementation libs.rxJava2Adapter
+  implementation libs.jackson
+  implementation libs.okhttp
+  implementation libs.coroutines
+  implementation libs.coroutinesAndroid
 
-  compile 'io.reactivex:rxandroid:1.2.1'
+  testImplementation libs.junit
+  testImplementation libs.testCore
+  testImplementation libs.truth
+  testImplementation libs.mockito
+  testImplementation libs.robolectric
 
-  testCompile 'junit:junit:4.12'
-  testCompile "org.mockito:mockito-core:2.7.21"
-  testCompile "org.robolectric:robolectric:3.3.2"
+  androidTestImplementation libs.rx2idler
+  androidTestImplementation libs.testCore
+  androidTestImplementation libs.testCoreKtx
+  androidTestImplementation libs.espressoCore
+  androidTestImplementation libs.testRunner
+  androidTestImplementation libs.testRules
 
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+  androidTestImplementation 'androidx.test:runner:1.4.0'
+  androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }

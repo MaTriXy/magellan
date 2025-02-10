@@ -1,18 +1,19 @@
-[![Build Status](https://travis-ci.org/wealthfront/magellan.svg?branch=master)](https://travis-ci.org/wealthfront/magellan)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.wealthfront/magellan/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.wealthfront/magellan)
-[![Javadocs](https://www.javadoc.io/badge/com.wealthfront/magellan.svg)](https://www.javadoc.io/doc/com.wealthfront/magellan)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.wealthfront/magellan-library/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.wealthfront/magellan-library)
 
 # Magellan
 
 <img src="assets/magellan_icon_web_hi_res_512.png" width="200" align="right" />
 
-The simplest navigation library for Android.
+A simple, flexible, and practical navigation framework for Android.
 
-## Main Features
+> Note: This library is currently under development for the next major version.
 
- - Navigation is as simple as calling `goTo(screen)`
- - You get **full control** of the backstack
- - Transitions are automaticaly handled for you
+## Why would I use Magellan?
+
+- **Simple**: Intuitive abstractions and encapsulation make it easy to reason through code.
+- **Flexible**: The infinitely-nestable structure allows for many different styles of structuring an app and navigating between pages.
+- **Practical**: We pay special attention to simplifying common patterns and removing day-to-day boilerplate.
+- **Testable**: Plain objects that are easy to instantiate make testing simple.
  
 ## Download
 
@@ -20,96 +21,28 @@ Add the dependencies you need in your `build.gradle`:
 
 ### Core library
 
-```gradle
-compile 'com.wealthfront:magellan:1.0.0'
+```groovy
+def magellanVersion = '2.2.8-beta'
+implementation "com.wealthfront:magellan-library:${magellanVersion}"
 ```
+
 ### Optional add-ons
 
-```gradle
-def magellanVersion = '1.0.0'
-compile 'com.wealthfront:magellan:' + magellanVersion
-compile 'com.wealthfront:magellan-support:' + magellanVersion
-compile 'com.wealthfront:magellan-rx:' + magellanVersion
+```groovy
+implementation "com.wealthfront:magellan-support:${magellanVersion}"
+implementation "com.wealthfront:magellan-rx:${magellanVersion}"
+implementation "com.wealthfront:magellan-rx2:${magellanVersion}"
+testImplementation "com.wealthfront:magellan-test:${magellanVersion}"
+
+// For support of older version:
+implementation "com.wealthfront:magellan-legacy:${magellanVersion}"
 ```
 
-### Add-on coming soon
+## Learning
 
-- Rx 2: already merged, will be in the next release (thanks to @FabianTerhorst).
-- Design lib (for tabs), in the meantime, [here is the code to implement tabs](https://github.com/wealthfront/magellan/wiki/Implementing-Tabs-or-other-%22Screens-into-a-Screen%22-UI%2C-using-ScreenGroup).
+For an explanation of the core concepts of Magellan, see our [wiki](https://github.com/wealthfront/magellan/wiki), starting with [Thinking in Magellan](https://github.com/wealthfront/magellan/wiki/Thinking-in-Magellan).
 
-## Getting started
-
-### Single Activity
-
-`MainActivity.java`:
-
-```java
-public class MainActivity extends SingleActivity {
-
-  @Override
-  protected Navigator createNavigator() {
-    return Navigator.withRoot(new HomeScreen()).build();
-  }
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-  }
-
-}
-```
-
-`activity_main.xml`:
-
-```xml
-<com.wealthfront.magellan.ScreenContainer
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/magellan_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    /> 
-```
-
-### Minimal Screen implementation
-
-Screen example `HomeScreen.java`:
-
-```java
-public class HomeScreen extends Screen<HomeView> {
-  @Override
-  protected HomeView createView(Context context) {
-    return new HomeView(context);
-  }
-}
-```
-
-Associated View `HomeView.java`:
-
-```java
-public class HomeView extends BaseScreenView<HomeScreen> {
-  public HomeView(Context context) {
-    super(context);
-    inflate(context, R.layout.home, this);
-  }
-}
-``` 
-
-## Samples
-
-[Basic sample](https://github.com/wealthfront/magellan/tree/master/magellan-sample/src/main/java/com/wealthfront/magellan/sample)
-
-![basic-sample-gif](https://cloud.githubusercontent.com/assets/3293136/24590417/4a39bbd8-17a1-11e7-89f9-e20398001341.gif)
-
-[Advanced sample](https://github.com/wealthfront/magellan/tree/master/magellan-sample-advanced) using Dependency Injection, Retrofit, and Rx.
-
-![advanced-sample-gif](https://cloud.githubusercontent.com/assets/3293136/24832801/b94ad73a-1c6c-11e7-89dd-2f561af21a04.gif)
-
-[Kotlin sample](https://github.com/jmfayard/android-kotlin-magellan) (courtesey of @jmfayard)
-
-## Learn More
-
-For more, see the [wiki](https://github.com/wealthfront/magellan/wiki).
+If you're eager to start, check out our [Quickstart wiki page](https://github.com/wealthfront/magellan/wiki/Quickstart).
 
 ## License
 

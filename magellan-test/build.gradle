@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = GROUP
+version = VERSION_NAME
+
+android {
+  compileSdkVersion Versions.compileSdkVersion
+
+  defaultConfig {
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  compileOptions {
+    setSourceCompatibility(JavaVersion.VERSION_17)
+    setTargetCompatibility(JavaVersion.VERSION_17)
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+
+  namespace 'com.wealthfront.magellan.test'
+
+  publishing {
+    singleVariant("release") {
+      withSourcesJar()
+    }
+  }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  kotlinOptions.allWarningsAsErrors = true
+  kotlinOptions.jvmTarget = JavaVersion.VERSION_17
+}
+
+dependencies {
+  implementation project(':magellan-library')
+
+  implementation libs.inject
+
+  testImplementation libs.junit
+  testImplementation libs.truth
+  testImplementation libs.mockito
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

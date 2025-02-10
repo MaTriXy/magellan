@@ -3,8 +3,12 @@ package com.wealthfront.magellan.rx;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import com.wealthfront.magellan.navigation.NavigableCompat;
+
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
+import androidx.annotation.NonNull;
 import rx.Observable;
 import rx.Subscription;
 
@@ -25,10 +29,15 @@ public class RxScreenTest {
   public class DummyRxScreen extends RxScreen {
 
     @Override
-    protected ViewGroup createView(Context context) {
+    protected ViewGroup createView(@NotNull Context context) {
       return null;
     }
 
+    @NonNull
+    @Override
+    public NavigableCompat getCurrentNavigable() {
+      return this;
+    }
   }
 
 }

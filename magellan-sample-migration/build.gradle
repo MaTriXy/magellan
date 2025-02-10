@@ -1,0 +1,120 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: "org.jetbrains.kotlin.kapt"
+
+android {
+  compileSdkVersion Versions.compileSdkVersion
+
+  defaultConfig {
+    applicationId "com.wealthfront.magellan.sample"
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
+    versionCode 1
+    versionName "1.0"
+    testInstrumentationRunner "com.wealthfront.magellan.sample.migration.IntegrationTestRunner"
+  }
+
+  compileOptions {
+    setSourceCompatibility(JavaVersion.VERSION_17)
+    setTargetCompatibility(JavaVersion.VERSION_17)
+  }
+
+  flavorDimensions += "ui"
+  productFlavors {
+    register("androidViews") {
+      isDefault = true
+      dimension = "ui"
+    }
+    register("compose") {
+      dimension = "ui"
+    }
+  }
+
+  buildFeatures {
+    compose = true
+    viewBinding = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = "1.4.8"
+  }
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17
+  }
+
+  packagingOptions {
+    exclude 'META-INF/LICENSE'
+  }
+
+  lintOptions {
+    disable 'InvalidPackage','IconDensities', 'ObsoleteLintCustomCheck', 'IconMissingDensityFolder', 'AllowBackup'
+  }
+  namespace 'com.wealthfront.magellan.sample.migration'
+}
+
+dependencies {
+  implementation project(':magellan-library')
+  implementation project(':magellan-legacy')
+
+  implementation libs.appCompat
+  implementation libs.dagger
+  kapt libs.daggerCompiler
+
+  implementation libs.glide
+  implementation libs.retrofit
+  implementation libs.jackson
+  implementation libs.okhttp
+  implementation libs.coroutines
+  implementation libs.coroutinesAndroid
+  implementation libs.jodaTime
+  implementation libs.recyclerView
+
+  implementation(platform(libs.compose.bom))
+  implementation libs.compose.foundation
+  implementation libs.compose.ui
+  implementation libs.compose.ui.graphics
+  implementation libs.compose.tooling
+  implementation libs.compose.tooling.preview
+  implementation libs.compose.material3
+
+  kaptTest libs.daggerCompiler
+  testImplementation(platform(libs.compose.bom))
+  testImplementation libs.junit
+  testImplementation libs.testCore
+  testImplementation libs.truth
+  testImplementation libs.mockK
+  testImplementation libs.robolectric
+  testImplementation libs.truth
+//  testImplementation libs.espressoCore
+  testImplementation libs.compose.junit4
+  debugImplementation libs.compose.manifest
+
+  kaptAndroidTest libs.daggerCompiler
+  androidTestImplementation(platform(libs.compose.bom))
+  androidTestImplementation libs.extJunit
+  androidTestImplementation libs.espressoCore
+  androidTestImplementation libs.espressoContrib
+  androidTestImplementation libs.testCore
+  androidTestImplementation libs.testCoreKtx
+  androidTestImplementation libs.testRunner
+  androidTestImplementation libs.testRules
+  androidTestImplementation libs.mockitoAndroid
+  androidTestImplementation libs.uiAutomator
+  androidTestImplementation libs.compose.junit4
+
+  androidTestImplementation 'androidx.test:runner:1.4.0'
+  androidTestUtil 'androidx.test:orchestrator:1.4.1'
+}
